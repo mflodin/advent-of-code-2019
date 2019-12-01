@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "target": "es2015",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "importHelpers": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "declaration": false,
+    "inlineSourceMap": true,
+    "skipLibCheck": true,
+    "strictNullChecks": true,
+    "isolatedModules": true,
+    "outDir": "dist"
+    // "lib": ["es2015"]
+  },
+  "include": ["src/**/*.ts"],
+  "exclude": ["src/**/*.test.ts"]
+}
