@@ -4,8 +4,9 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "dev": "concurrently \"tsc -w\" \"nodemon dist/server.js\"",
-    "test": "jest"
+    "tsc": "tsc -w",
+    "dev": "nodemon dist/main.js",
+    "test": "jest --watch"
   },
   "devDependencies": {
     "@types/jest": "^24.0.23",
