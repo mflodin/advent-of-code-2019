@@ -6,8 +6,10 @@ interface Direction {
 interface Point {
   x: number;
   y: number;
-  a?: boolean;
-  b?: boolean;
+  A?: boolean;
+  B?: boolean;
+  stepsA?: number;
+  stepsB?: number;
 }
 
 const DirectionMap = {
@@ -16,6 +18,11 @@ const DirectionMap = {
   L: { x: -1, y: 0 },
   R: { x: 1, y: 0 }
 };
+
+interface Steps {
+  stepsA?: number;
+  stepsB?: number;
+}
 
 interface Movement {
   direction: Direction;
@@ -28,13 +35,19 @@ function parsePath(path: string): Array<Movement> {
   return result;
 }
 
-function mark(plane: Map<string, Point>, y: number, x: number, letter: string) {
+function mark(
+  plane: Map<string, Point>,
+  y: number,
+  x: number,
+  letter: string,
+  steps: Steps
+) {
   const key = JSON.stringify({ x, y });
   const position = plane.get(key);
   if (position) {
-    position[letter] = true;
+    Object.assign(position, { [letter]: true }, steps);
   } else {
-    plane.set(key, { x, y, [letter]: true });
+    plane.set(key, { x, y, [letter]: true, ...steps });
   }
 }
 
@@ -45,6 +58,7 @@ function traversePath(
 ): void {
   let y = 0;
   let x = 0;
+  let steps = 0;
   for (let step of path) {
     let i = 0;
     let j = 0;
@@ -52,11 +66,12 @@ function traversePath(
       i < step.length * Math.abs(step.direction.y) ||
       j < step.length * Math.abs(step.direction.x)
     ) {
+      steps += 1;
       y += step.direction.y;
       x += step.direction.x;
       i += 1;
       j += 1;
-      mark(plane, y, x, letter);
+      mark(plane, y, x, letter, { ["steps" + letter]: steps });
     }
   }
 }
@@ -77,13 +92,31 @@ export function closestIntersection(
 
   const plane: Map<string, Point> = new Map<string, Point>();
 
-  traversePath(plane, pathA, "a");
-  traversePath(plane, pathB, "b");
+  traversePath(plane, pathA, "A");
+  traversePath(plane, pathB, "B");
 
   const res = Array.from(plane.values())
-    .filter((pos) => pos.a && pos.b)
+    .filter((pos) => pos.A && pos.B)
     .map((pos) => Math.abs(pos.x) + Math.abs(pos.y))
     .reduce(smallest);
 
+  return res;
+}
+
+export function leastSteps(pathStringA: string, pathStringB: string): number {
+  const pathA = parsePath(pathStringA);
+  const pathB = parsePath(pathStringB);
+
+  const plane: Map<string, Point> = new Map<string, Point>();
+
+  traversePath(plane, pathA, "A");
+  traversePath(plane, pathB, "B");
+
+  const res = Array.from(plane.values())
+    .filter((pos) => pos.A && pos.B)
+    .map((pos) => (pos.stepsA || 0) + (pos.stepsB || 0))
+    .reduce(smallest);
+
+  // console.log(res);
   return res;
 }
