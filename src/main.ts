@@ -1,12 +1,14 @@
 import { readFileSync } from "fs";
-import { leastSteps } from "./3";
+import { findPasswords } from "./4";
 
 function runner() {
-  const [pathA, pathB] = String(readFileSync("./input/3.txt")).split("\n");
+  const min = 138241;
+  const max = 674034;
+  var arr = Array.from(Array(max - min + 1), (e, i) => i + min).map(String);
 
-  const res = leastSteps(pathA, pathB);
+  const res = findPasswords(arr);
 
-  console.log(res);
+  console.log(res.length);
 }
 
 runner();
