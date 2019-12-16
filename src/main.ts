@@ -1,14 +1,14 @@
 import { readFileSync } from "fs";
-import { findPasswords, findPasswords2 } from "./4";
+import { intcode } from "./5";
 
 function runner() {
-  const min = 138241;
-  const max = 674034;
-  var arr = Array.from(Array(max - min + 1), (e, i) => i + min).map(String);
+  var arr = String(readFileSync("./input/5.txt"))
+    .split(",")
+    .map(Number);
 
-  const res = findPasswords2(arr);
+  const res = intcode(arr, 1);
 
-  console.log(res.length);
+  console.log(res.output);
 }
 
 runner();
