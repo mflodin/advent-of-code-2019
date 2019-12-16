@@ -1,11 +1,16 @@
 export function intcode(
-  code: Array<number>,
+  incode: Array<number>,
   input = 0
 ): { code: number[]; output: number[] } {
+  const code = [...incode];
   const ADD = 1;
   const MULTIPLY = 2;
   const WRITE = 3;
   const READ = 4;
+  const JUMP_IF_TRUE = 5;
+  const JUMP_IF_FALSE = 6;
+  const LESS_THAN = 7;
+  const EQUALS = 8;
   const END = 99;
   const POSITION_MODE = 0;
   let index = 0;
@@ -28,7 +33,7 @@ export function intcode(
     const cMode = Number(modes[modes.length - 3] ?? 0);
     const c = code[cPos];
 
-    if (safety % 1e6 === 0) {
+    if (safety % 1e6 === 0 && safety !== 0) {
       console.log({ safety, instruction, opCode, modes, a, b, c });
     }
 
@@ -44,6 +49,24 @@ export function intcode(
     } else if (opCode === READ) {
       output.push(a);
       index += 2;
+    } else if (opCode === JUMP_IF_TRUE) {
+      if (a !== 0) {
+        index = b;
+      } else {
+        index += 3;
+      }
+    } else if (opCode === JUMP_IF_FALSE) {
+      if (a === 0) {
+        index = b;
+      } else {
+        index += 3;
+      }
+    } else if (opCode === LESS_THAN) {
+      code[cPos] = a < b ? 1 : 0;
+      index += 4;
+    } else if (opCode === EQUALS) {
+      code[cPos] = a === b ? 1 : 0;
+      index += 4;
     }
 
     safety += 1;

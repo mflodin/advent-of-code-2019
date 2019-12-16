@@ -6,7 +6,7 @@ function runner() {
     .split(",")
     .map(Number);
 
-  const res = intcode(arr, 1);
+  const res = intcode(arr, 5);
 
   console.log(res.output);
 }
