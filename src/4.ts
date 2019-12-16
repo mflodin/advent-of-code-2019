@@ -9,3 +9,9 @@ export function findPasswords(arr: Array<string>): Array<string> {
       })
   );
 }
+
+export function findPasswords2(arr: Array<string>): Array<string> {
+  return findPasswords(
+    findPasswords(arr).map((x) => x.replace(/(\d)\1\1+/g, "$1"))
+  );
+}
